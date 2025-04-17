@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#a7c7e7", "id": "1.1", "label": "1.1: Linux", "shape": "dot", "title": "\n"}, {"color": "#a7c7e7", "id": "1.1.1", "label": "1.1.1: Container Spinoff", "shape": "dot", "title": "\n\n"}, {"color": "#a7c7e7", "id": "1.1.1.1", "label": "1.1.1.1: PDK = 6080", "shape": "dot", "title": "    dazel run --config=drive-linux_6.0.8.0 //partners/daimler/av/packaging/containers/avos:avos-linux-daimler\n"}, {"color": "#a7c7e7", "id": "1.1.1.2", "label": "1.1.1.2: PDK = 6510", "shape": "dot", "title": "    dazel run --config=drive-linux_6.5.1 //partners/daimler/av/packaging/containers/avos:avos-linux-daimler\n\n"}, {"color": "#a7c7e7", "id": "1.1.2", "label": "1.1.2: Launch the container", "shape": "dot", "title": "\n    docker run -it --privileged --net=host -v /dev/bus/usb:/dev/bus/usb -v /home/kballa/tmp:/mnt/ddu-export-dir  ${AVOS_URL}\n\n"}, {"color": "#a7c7e7", "id": "1.1.3", "label": "1.1.3: Create DDU images", "shape": "dot", "title": "\n    board_type=\u003cboard_type\u003e #p3710-10-a01, p3710-12-a03, p3710-12-a04, p3663-a01 or p4024-a00, p3710-10-s05, p3710-12-s05\n    /rfs/ota-files/create_ddu_ota_pkg.sh -d ES -b p3710-10-s05 -o linux -p my-ddu-ota-pkg\n\n\n"}, {"color": "#a7c7e7", "id": "1.2", "label": "1.2: QNX", "shape": "dot", "title": "\n"}, {"color": "#a7c7e7", "id": "1.2.1", "label": "1.2.1: Container Spinoff", "shape": "dot", "title": "\nexport NDAS_PARTNER=daimler\n"}, {"color": "#a7c7e7", "id": "1.2.1.1", "label": "1.2.1.1: PDK = 6080", "shape": "dot", "title": "    dazel run --config=drive-qnx_6.0.8.0 //partners/daimler/av/packaging/containers/avos:avos-qnx-daimler\n"}, {"color": "#a7c7e7", "id": "1.2.1.2", "label": "1.2.1.2: PDK = 609", "shape": "dot", "title": "    dazel run --config=drive-qnx_6.0.9 //partners/daimler/av/packaging/containers/avos:avos-qnx-daimler\n"}, {"color": "#a7c7e7", "id": "1.2.1.3", "label": "1.2.1.3: PDK = 652", "shape": "dot", "title": "    dazel run --config=drive-qnx_6.5.2 //partners/daimler/av/packaging/containers/avos:avos-qnx-daimler\n\n"}, {"color": "#a7c7e7", "id": "1.2.2", "label": "1.2.2: Launch the container", "shape": "dot", "title": "\n"}, {"color": "#a7c7e7", "id": "1.2.2.1", "label": "1.2.2.1: PDK = 6080", "shape": "dot", "title": "    docker run --rm -dt --privileged --net host -v /lib/modules/5.4.0-96-generic:/lib/modules/5.4.0-96-generic -v /dev/bus/usb:/dev/bus/usb -v /home/kballa/.qnx/license:/root/.qnx/license -v /home/kballa/qnx710-ga1-6.0.8.0:/sdp -e QNX_BASE=/sdp -e QNX_TARGET=/sdp/target/qnx7 -e QNX_HOST=/sdp/host/linux/x86_64 -e PATH=/sdp/host/linux/x86_64/usr/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin -v /home/kballa/tmp/:/kballa --workdir /rfs \u003cID\u003e\n"}, {"color": "#a7c7e7", "id": "1.2.2.2", "label": "1.2.2.2: PDK = 609", "shape": "dot", "title": "    docker run --rm -dt --privileged --net host -v /lib/modules/5.4.0-96-generic:/lib/modules/5.4.0-96-generic -v /dev/bus/usb:/dev/bus/usb -v /home/kballa/.qnx/license:/root/.qnx/license -v /home/kballa/qnx710-ga1-6.0.9.2-0418:/sdp -e QNX_BASE=/sdp -e QNX_TARGET=/sdp/target/qnx7 -e QNX_HOST=/sdp/host/linux/x86_64 -e PATH=/sdp/host/linux/x86_64/usr/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin -v /home/kballa/tmp/:/kballa --workdir /rfs \u003cID\u003e\n"}, {"color": "#a7c7e7", "id": "1.2.2.3", "label": "1.2.2.3: PDK = 6520", "shape": "dot", "title": "    docker run --rm -dt --name 1216-qnx-std-6520-rc3 --privileged --net host -v /lib/modules/5.4.0-96-generic:/lib/modules/5.4.0-96-generic -v /dev/bus/usb:/dev/bus/usb -v /home/kballa/.qnx/license:/root/.qnx/license -v /home/kballa/qnx710-ga1-6.5.2-1213:/sdp -e QNX_BASE=/sdp -e QNX_TARGET=/sdp/target/qnx7 -e QNX_HOST=/sdp/host/linux/x86_64 -e PATH=/sdp/host/linux/x86_64/usr/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin -v /home/kballa/tmp/:/kballa --workdir /rfs \u003cID\u003e\n"}, {"color": "#a7c7e7", "id": "1.2.2.4", "label": "1.2.2.4: PDK = 6510 rr replay test", "shape": "dot", "title": "    docker run -dt --name 6510-rc5-DOS-qnx-std-rr-replaytest-1107-kedar  --privileged --net=host -v /dev/bus/usb:/dev/bus/usb -v /drive_flashing/:/drive_flashing  -v /home/kballa/.qnx/license:/root/.qnx/license  -v /home/kballa/qnx710-ga1-6.5.1.0:/sdp urm.nvidia.com/sw-driveos-qnx-docker-local/release/drive-agx-orin-qnx-aarch64-pdk-build-x86-internal/embedded-6.5.1.0:6.5.1.0-0005\n\n"}, {"color": "#a7c7e7", "id": "1.2.3", "label": "1.2.3: Create DDU images", "shape": "dot", "title": "\n    python3 /rfs/drive-qnx/filesystem/av_copytarget_tool.py\n    export PDK_TOP=/rfs\n    export QNX_BASE=/sdp\n    export QNX_TARGET=$QNX_BASE/target/qnx7/\n    export QNX_HOST=$QNX_BASE/host/linux/x86_64/\n    export QNX_TOP=$PDK_TOP/drive-qnx/\n    export PATH=$PATH:$QNX_HOST/usr/bin\n    export MKIFS_CUSTOM_PATH=$QNX_BASE/custom/nvidia_ptpd/target/qnx7/aarch64le/sbin\n    export MKIFS_CUSTOM_PATH=$MKIFS_CUSTOM_PATH:$QNX_BASE/custom/nvidia/libslog2parse/target/qnx7/aarch64le/lib\n    export CPUVARDIR=aarch64le\n    export NV_WORKSPACE=/rfs\n    //6080\n    bash ${QNX_TOP}/bsp/images/generate_IFS_image.sh ${QNX_TOP}/bsp/images/orin_gos_vm.build ${QNX_TOP}/bsp/images/ifs-nvidia-t18x-vcm31t186-orin_gos_vm.bin\n    //6092\n    /rfs/drive-qnx/filesystem/qnx_create_ifs.sh -i /rfs/drive-qnx/filesystem/build-fs/configs/orin_gos_vm.CONFIG.json\n    /rfs/ota-files/create_ddu_ota_pkg.sh -d ES -b p3710-10-s05 -o qnx -p ddu-ota -n\n\n"}, {"color": "#a7c7e7", "id": "1.3", "label": "1.3: QNX-Safety", "shape": "dot", "title": "\n"}, {"color": "#a7c7e7", "id": "1.3.1", "label": "1.3.1: Container spinoff", "shape": "dot", "title": "    export NDAS_PARTNER=daimler\n"}, {"color": "#a7c7e7", "id": "1.3.1.1", "label": "1.3.1.1: PDK = 6080", "shape": "dot", "title": "    dazel run --config=drive-qnx-6.0.8.0_tegra_int-docker_git-av_avos-sae2-safety_rel  --config=remote_exec //partners/daimler:avos_images_group_build\n"}, {"color": "#a7c7e7", "id": "1.3.1.2", "label": "1.3.1.2: PDK = 609x", "shape": "dot", "title": "    dazel run --config=drive-qnx-6.0.9_tegra_int-docker_git-av_avos-sae2-safety_rel  --config=remote_exec //partners/daimler:avos_images_group_build\n\n"}, {"color": "#a7c7e7", "id": "1.3.2", "label": "1.3.2: Launch the container", "shape": "dot", "title": "\n"}, {"color": "#a7c7e7", "id": "1.3.2.1", "label": "1.3.2.1: PDK = 6080", "shape": "dot", "title": "    docker run --rm -dt --privileged --net=host -v /dev/bus/usb:/dev/bus/usb -v /home/kballa/qnx710-ga1-6.0.8.0-0222:/sdp -v /home/kballa/.qnx:/root/.qnx -v /home/kballa/ndas:/mnt/ddu-export-dir -e QNX_BASE=/sdp -e QNX_TARGET=/sdp/target/qnx7 -e QNX_HOST=/sdp/host/linux/x86_64 -e PATH=/sdp/host/linux/x86_64/usr/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \u003cdocker image\u003e\n"}, {"color": "#a7c7e7", "id": "1.3.2.2", "label": "1.3.2.2: PDK = 6090(6.0-safety-av)", "shape": "dot", "title": "    docker run --rm -dt --name name --privileged --net=host -v /dev/bus/usb:/dev/bus/usb -v /home/kballa/qnx710-ga1-6.0.9:/sdp -v /home/kballa/.qnx:/root/.qnx -v /home/kballa/ndas:/mnt/ddu-export-dir -e QNX_BASE=/sdp -e QNX_TARGET=/sdp/target/qnx7 -e QNX_HOST=/sdp/host/linux/x86_64 -e PATH=/sdp/host/linux/x86_64/usr/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \u003cdocker_image\u003e\n"}, {"color": "#a7c7e7", "id": "1.3.2.3", "label": "1.3.2.3: PDK = 652", "shape": "dot", "title": "     docker run --rm -dt --name \u003cname\u003e --privileged --net=host -v /dev/bus/usb:/dev/bus/usb -v /home/kballa/qnx710-ga1-6.5.2-1213:/sdp -v /home/kballa/.qnx:/root/.qnx -v /home/kballa/ndas:/mnt/ddu-export-dir -e QNX_BASE=/sdp -e QNX_TARGET=/sdp/target/qnx7 -e QNX_HOST=/sdp/host/linux/x86_64 -e PATH=/sdp/host/linux/x86_64/usr/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \u003cdocker_image\u003e\n\n"}, {"color": "#a7c7e7", "id": "1.3.3", "label": "1.3.3: Create DDU images", "shape": "dot", "title": "\n# image generation script\n./av/hyperion/8.1/gen_nv_ref_ddu/gen_nv_ref_ddu_avos_flow.sh -s prod_debug_extra -b p3710-12-a04 -i avos --pdk 6.0.9  // -i full for avos image full will generate the full ndas ddu\n./mnt/ddu-export-dir/av/hyperion/8.1/tools/image_prep/image_prep.py img --board p3710-10-s05 --enable-nvdec --out-dir /mnt/ddu-export-dir --safety-image-variant prod_debug_extra --power-profile MAXP-A-990-D-12 --image-type avos //enable nvdec\n\n/rfs/ndas_support_tools/image_prep.py img --board  p3710-10-s05  --out-dir /mnt/ddu-export-dir --safety-image-variant prod_debug_extra --image-type avos\n\n\n2. Flashing the DDU image\n\n    Creating workspace\n    mkdir /tmp/flashing.\n    cd /tmp/flashing\n\n    Download *.tgz and *.yml file to flashing folder\n\n    Start flashing container with be;pw command\n        docker run -it --name flashing_container -dt --privileged --net host -v /dev/bus/usb:/dev/bus/usb -v /run/udev:/run/udev --mount type=bind,source=/etc/device_config/device_config.yaml,target=/rfs/cache/device_config.yaml -v $PWD/log:/rfs/cache/log -v $PWD:/rfs/cache/img -v $PWD/cache:/cache/cache --rm nvcr.io/nv-drive-internal/drivesw-dev/flashing_container:4.3.4.0\n    set param BUNDLE_NAME\n    BUNDLE_NAME=\"/rfs/cache/img/hyp81_avos_1D_target-qnx-safety_prod-debug-extra_v25_ES_3710_F0_TS4_SKU12_0_20241119141555_94a22949.yml\"\n    start flashing\n    docker exec -it flashing_container python3 av/update/flashing_container/cli/fc-cli --bundle-url $BUNDLE_NAME --local_path /rfs/cache/img --token \"NA\"\n    Verify flashing is success by scrolling the logs up\n\n        FC Version: 4.3.3.0\n        Build Date: 2024-07-05 08:54:02 UTC\n        Git Branch: sandbox/flashing_container-4.3.3.0-fix\n        Commit SHA: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n        ============================================================\n        Analyzer Config Version: 20240623 [Builtin]\n        ============================================================\n        Status: SW Update Success!\n\n    Once the flashing is completed stop the flashing_container (This step is must else you cannot access tegra (UART will be locked by flashing_container)\n        docker stop flashing_container\n\n\n3.  Generating DDU image(GVS) on Host machine\n\ncd ndas\nsource ./scripts/envsetup.sh\nbuildauth login\nexport NV_PRIVATE_CI_JOBS_BUILD_DIR=./private/ci/jobs/build\nexport NV_PRIVATE_CI_JOBS_DIR=./private/ci/jobs\nexport AV_OTA_PACKAGE=false\nexport AV_DDU_UPLOAD=true\nexport DDU_FORCE_UPLOAD=false\nexport TOP=$(dirname $PWD)\nexport SERVICE_WRK_DIR=/home/$USER/artifacts\nexport DDU_TARGET=\"avos-3710TS5_SKU12-ES-F0\"\nexport BUILD_OS=qnx\nexport BUILD_PDK_VER=6.0.9\n\n//example1: int-dduimg\nexport NV_COMPONENT=\"ndas-main drive-${BUILD_OS}-${BUILD_PDK_VER} tegra int-dduimg git-av avos-partner-mb-safety rel\"\nexport BUILD_BRAIN_COMPONENT=\"ndas-main_drive-${BUILD_OS}-${BUILD_PDK_VER}_tegra_int-dduimg_git-av_avos-partner-mb-safety_rel\"\n./ci/jobs/build/run.sh\n\n//example2: int-pkg builds\nexport NV_COMPONENT=\"av-dev-l2pp-2 drive-${BUILD_OS}-${BUILD_PDK_VER} tegra int-pkg git-av av-sae2-safety rel\" //safety\nexport NV_COMPONENT=\"av-dev-l2pp-2 drive-${BUILD_OS}-${BUILD_PDK_VER} tegra int-pkg git-av av-partner-mb rel\". //std\nexport BUILD_BRAIN_COMPONENT=\"av-dev-l2pp-2_drive-qnx-6.0.9_tegra_int-pkg_git-av_av-sae2-safety_rel\"\nexport BUILD_BRAIN_COMPONENT=\"av-dev-l2pp-2_drive-qnx-6.5.2_tegra_int-pkg_git-av_av-sae2-safety_rel\". //safety\nexport BUILD_BRAIN_COMPONENT=\"av-dev-l2pp-2_drive-qnx-6.5.2_tegra_int-pkg_git-av_av-partner-mb_rel\". //std\n\n//example3 6080\nexport NV_COMPONENT=\"av-dev-l2pp-2 drive-${BUILD_OS}-${BUILD_PDK_VER} tegra int-pkg git-av av-partner-mb rel\"\nexport BUILD_BRAIN_COMPONENT=\"av-dev-l2pp-2_drive-qnx-6.0.8.0_tegra_int-pkg_git-av_av-partner-mb_rel\"\n\n ./ci/jobs/build/run.sh\n"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "1.1", "to": "1.1.1"}, {"arrows": "to", "from": "1.1", "to": "1.1.2"}, {"arrows": "to", "from": "1.1", "to": "1.1.3"}, {"arrows": "to", "from": "1.1.1", "to": "1.1.1.1"}, {"arrows": "to", "from": "1.1.1", "to": "1.1.1.2"}, {"arrows": "to", "from": "1.2", "to": "1.2.1"}, {"arrows": "to", "from": "1.2", "to": "1.2.2"}, {"arrows": "to", "from": "1.2", "to": "1.2.3"}, {"arrows": "to", "from": "1.2.1", "to": "1.2.1.1"}, {"arrows": "to", "from": "1.2.1", "to": "1.2.1.2"}, {"arrows": "to", "from": "1.2.1", "to": "1.2.1.3"}, {"arrows": "to", "from": "1.2.2", "to": "1.2.2.1"}, {"arrows": "to", "from": "1.2.2", "to": "1.2.2.2"}, {"arrows": "to", "from": "1.2.2", "to": "1.2.2.3"}, {"arrows": "to", "from": "1.2.2", "to": "1.2.2.4"}, {"arrows": "to", "from": "1.3", "to": "1.3.1"}, {"arrows": "to", "from": "1.3", "to": "1.3.2"}, {"arrows": "to", "from": "1.3", "to": "1.3.3"}, {"arrows": "to", "from": "1.3.1", "to": "1.3.1.1"}, {"arrows": "to", "from": "1.3.1", "to": "1.3.1.2"}, {"arrows": "to", "from": "1.3.2", "to": "1.3.2.1"}, {"arrows": "to", "from": "1.3.2", "to": "1.3.2.2"}, {"arrows": "to", "from": "1.3.2", "to": "1.3.2.3"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "barnesHut": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.3,
+            "damping": 0.09,
+            "gravitationalConstant": -80000,
+            "springConstant": 0.001,
+            "springLength": 250
+        },
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

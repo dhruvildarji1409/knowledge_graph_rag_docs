@@ -1,16 +1,25 @@
-# 📘 Graphical RAG Documentation Authoring Guide
+# 📘 Knowledge Graph RAG Documentation
 
-This guide defines the formatting standard for writing technical documents that can be parsed into a **Knowledge Graph** and used in a **Graphical RAG (Retrieval-Augmented Generation)** chatbot system.
+This repository contains tools and guidelines for creating documentation that can be parsed into a **Knowledge Graph** and used in a **Graphical RAG (Retrieval-Augmented Generation)** system.
 
-## 🖼️ Knowledge Graph Visualization
+## 🎯 What is this repository for?
+
+This project helps you:
+
+1. Structure technical documentation in a specific format
+2. Parse this documentation into knowledge graph nodes and edges
+3. Create interactive visualizations of the resulting graph
+4. Build a more intelligent search and retrieval system
+
+## 🖼️ Knowledge Graph Example
 
 ![Knowledge Graph Visualization](data/graph_visual.png)
 
-*The image above shows an example of the knowledge graph structure built from properly formatted documentation.*
+*The image above shows a knowledge graph built from a properly formatted document. See [ddu_guide.txt](data/raw_docs/ddu_guide.txt) for an example of the underlying documentation format.*
 
 ## 🔍 Interactive Graph Explorer
 
-This repository includes an interactive graph visualization that allows you to explore the knowledge graph in detail:
+This repository includes an interactive graph visualization:
 
 - **File:** `data/graph_ui.html`
 - **Features:**
@@ -35,20 +44,19 @@ python -m graph_builder.graph_visualizer
 
 This will create a new HTML visualization from the current graph data (`data/graph.gpickle`).
 
----
+## 📚 How to Use This Repository
 
-## 🎯 Purpose
+1. **Read the documentation format guidelines below**
+2. **Create your technical documentation** following the format
+3. **Save your files** as `.txt` in the `data/raw_docs/` directory
+4. **Run the graph builder** to parse your documents
+5. **Explore the results** using the interactive visualization
 
-The goal is to structure documentation in a way that allows:
-- Easy parsing into graph nodes and edges
-- Intelligent search and semantic understanding
-- Graph-based context expansion during chatbot inference
+## 📝 Documentation Format Guidelines
 
----
+### Document Structure
 
-## 🧱 Document Format Structure
-
-Use numeric hierarchical structure like:
+Use a numeric hierarchical structure like:
 
 ```
 1. Main Topic
@@ -62,9 +70,7 @@ Each heading:
 - Its number implies **depth and relationship**
 - Its indented content becomes the **node content**
 
----
-
-## ✅ Authoring Rules
+### Authoring Rules
 
 | Level     | Format         | Example                                  |
 |-----------|----------------|------------------------------------------|
@@ -74,9 +80,7 @@ Each heading:
 | Sub-step  | `1.1.1.1`      | `1.1.1.1 PDK = 6080`                      |
 | Commands  | Indented (4 spaces) | `    dazel run ...`                  |
 
----
-
-## ✍️ Authoring Best Practices
+### Authoring Best Practices
 
 - Keep **titles short** and specific
 - Always **indent command/code** blocks with 4 spaces (not tabs)
@@ -84,25 +88,7 @@ Each heading:
 - Add **inline comments** for clarity (e.g., `# PDK = 6080`)
 - Do **not skip levels** (you can't have `1.2.3` without `1.2.1`)
 
----
-
-## 📂 File Naming
-
-Save files in: `data/raw_docs/`
-
-Use filenames like:
-
-```
-ddu-linux.txt
-flashing-process.txt
-qnx-safety.txt
-```
-
-Use `.txt` extension only.
-
----
-
-## ✅ Example (Well-Formatted)
+### Example (Well-Formatted Document)
 
 ```
 1.2 QNX
@@ -117,23 +103,16 @@ Use `.txt` extension only.
     docker run --rm -dt --privileged --net host ...
 ```
 
----
-
-## 🧠 What This Builds in the Graph
-
-Example graph structure:
-
+This builds the following graph structure:
 ```
 1 ──> 1.2 ──> 1.2.1 ──> 1.2.1.3
               │
               └──> 1.2.2
 ```
 
-Each `─>` is a **parent → child** relationship. These nodes and their content become part of the searchable knowledge base.
+Each `─>` is a **parent → child** relationship.
 
----
-
-## ❌ Common Mistakes
+### Common Mistakes to Avoid
 
 | ❌ Incorrect                     | ✅ Correct                         |
 |----------------------------------|-----------------------------------|
@@ -143,19 +122,9 @@ Each `─>` is a **parent → child** relationship. These nodes and their conten
 | Long paragraph as a heading     | Break into smaller substeps     |
 | Unstructured commands           | Always indent under heading     |
 
----
+## 💡 Why Graphical RAG?
 
-🧠 Why Use Graphical RAG Instead of Traditional RAG?
-
-Traditional RAG systems retrieve information from unstructured documents based on vector similarity (semantic embeddings). While effective in some domains, they struggle with technical documentation because of:
-
-- Poor structure in raw text
-
-- Lack of semantic hierarchy
-
-- Difficulty resolving procedural steps or dependencies
-
-## ⚔️ Traditional RAG vs Graphical RAG
+### Traditional RAG vs Graphical RAG
 
 | **Feature**                | **Traditional RAG**                         | **Graphical RAG**                                     |
 |----------------------------|---------------------------------------------|--------------------------------------------------------|
@@ -167,80 +136,23 @@ Traditional RAG systems retrieve information from unstructured documents based o
 | **Debuggability**          | Opaque - hard to trace sources             | Transparent - every node is traceable                 |
 | **Update Process**         | Requires re-embedding whole corpus         | Only new nodes/edges added                           |
 
----
+### Key Benefits
 
-## ✅ Key Benefits of Graphical RAG
+1. **Context-Aware Retrieval**: Related steps, not just similar sentences
+2. **Preserves Order and Dependencies**: Maintains instruction flow
+3. **Fine-Grained Search**: Each step/command lives in its own graph node
+4. **Extensibility**: Just drop new structured files into the raw doc folder
+5. **Clear Auditability**: Every response is traceable to its source
 
-### 1. Context-Aware Retrieval
-The graph structure allows retrieving **related steps**, not just similar sentences.
+## 📂 File Organization
 
-> **Example**:  
-If a question hits `1.2.1.3`, we can also expand to `1.2.1`, `1.2`, and `1.2.1.2`.
+- `data/raw_docs/` - Place for your raw documentation files
+- `graph_builder/` - Code to parse documents and build the graph
+- `data/` - Output directory for graph data and visualizations
 
----
+## 💬 Questions or Need Help?
 
-### 2. Preserves Order and Dependencies
-Unlike flat chunk-based RAG, Graphical RAG maintains **instruction flow**.
-
-**Example** workflow:
-- First: spin off the container  
-- Then: launch it  
-- Then: generate the image  
-
-✅ This avoids LLM hallucinations or incorrect step orders.
-
----
-
-### 3. Fine-Grained Search
-Each step/command lives in its own graph node, enabling:
-- 🎯 High-precision retrieval
-- 🔍 Intent filtering (e.g., "build" → only `dazel` commands)
-
----
-
-### 4. Extensibility
-To add more knowledge:
-- Just drop new structured `.txt` files into the raw doc folder
-- The parser will convert them into nodes & edges
-- No need to reprocess the entire graph
-
----
-
-### 5. Clear Auditability
-Every response is traceable:
-- Source node ID (like `1.3.2.1`)
-- Original file section
-- Graph traversal path
-
-This improves **confidence**, **debuggability**, and **trust** in AI-generated answers.
-
----
-
-## 📜 Why Structured Documentation Is Required
-
-To support graph-based search and reasoning:
-- Authors must follow a predictable, hierarchical format
-
-**Benefits of structure:**
-- ✅ Enables automatic graph generation from text
-- ✅ Reduces ambiguity from unstructured prose
-- ✅ Maintains correct context & relationships between steps
-
-**Without structure:**
-- ❌ AI may confuse which PDK applies to which step
-- ❌ Mix launch instructions with flash steps
-- ❌ Retrieve incomplete or irrelevant answers
-
----
-
-By adopting **Graphical RAG + Structured Authoring**, your system becomes:
-- 💡 Smarter in retrieval  
-- 🚀 Scalable for future growth  
-- ✅ Auditable, interpretable, and production-ready  
-
-## 💬 Questions?
-
-Refer to previous examples in `data/raw_docs/` or contact the Graphical RAG maintainer.
+See a complete example in [ddu_guide.txt](data/raw_docs/ddu_guide.txt) or contact the Graphical RAG maintainer.
 
 ---
 

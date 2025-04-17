@@ -2,6 +2,12 @@
 
 This guide defines the formatting standard for writing technical documents that can be parsed into a **Knowledge Graph** and used in a **Graphical RAG (Retrieval-Augmented Generation)** chatbot system.
 
+## 🖼️ Knowledge Graph Visualization
+
+![Knowledge Graph Visualization](data/graph_visual.png)
+
+*The image above shows an example of the knowledge graph structure built from properly formatted documentation.*
+
 ---
 
 ## 🎯 Purpose
@@ -49,7 +55,7 @@ Each heading:
 - Always **indent command/code** blocks with 4 spaces (not tabs)
 - Use **plain text** — avoid Markdown symbols like `#`, `-`, `*`
 - Add **inline comments** for clarity (e.g., `# PDK = 6080`)
-- Do **not skip levels** (you can’t have `1.2.3` without `1.2.1`)
+- Do **not skip levels** (you can't have `1.2.3` without `1.2.1`)
 
 ---
 
@@ -111,7 +117,6 @@ Each `─>` is a **parent → child** relationship. These nodes and their conten
 | Unstructured commands           | Always indent under heading     |
 
 ---
-
 
 🧠 Why Use Graphical RAG Instead of Traditional RAG?
 
@@ -205,9 +210,6 @@ By adopting **Graphical RAG + Structured Authoring**, your system becomes:
 - 💡 Smarter in retrieval  
 - 🚀 Scalable for future growth  
 - ✅ Auditable, interpretable, and production-ready  
-
-
-
 
 ## 💬 Questions?
 

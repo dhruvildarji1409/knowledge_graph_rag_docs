@@ -8,6 +8,33 @@ This guide defines the formatting standard for writing technical documents that 
 
 *The image above shows an example of the knowledge graph structure built from properly formatted documentation.*
 
+## 🔍 Interactive Graph Explorer
+
+This repository includes an interactive graph visualization that allows you to explore the knowledge graph in detail:
+
+- **File:** `data/graph_ui.html`
+- **Features:**
+  - Zoom in/out to explore different parts of the graph
+  - Click on nodes to see their content
+  - Drag nodes to rearrange the visualization
+  - Hover over nodes to see detailed information
+
+### How to View the Interactive Graph
+
+1. Clone this repository
+2. Open `data/graph_ui.html` in any modern web browser
+3. Explore the graph by clicking, dragging, and zooming
+
+### How to Generate a New Graph Visualization
+
+The interactive graph is generated using the `graph_visualizer.py` script:
+
+```python
+python -m graph_builder.graph_visualizer
+```
+
+This will create a new HTML visualization from the current graph data (`data/graph.gpickle`).
+
 ---
 
 ## 🎯 Purpose

@@ -98,9 +98,9 @@ def get_azure_client():
         
     try:
         # Azure OpenAI credentials
-        client_id = "nvssa-prd-_lwo4JYj0iZDQaQhmQE64W5gl25gqmvjnBjvY-6YSuU"
-        client_secret = "ssap-ryqWx5WbHYNulr9TPcA"
-        token_url = "https://5kbfxgaqc3xgz8nhid1x1r8cfestoypn-trofuum-oc.ssa.nvidia.com/token"
+        client_id = ""
+        client_secret = ""
+        token_url = ""
         scope = "azureopenai-readwrite"
 
         token = get_oauth_token(token_url, client_id, client_secret, scope)
